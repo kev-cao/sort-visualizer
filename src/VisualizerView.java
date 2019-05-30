@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 
 public class VisualizerView extends JPanel {
@@ -8,6 +9,7 @@ public class VisualizerView extends JPanel {
     private int width, height;
     private BufferedImage arrayImage;
     private JLabel imageLabel;
+    private JFrame frame;
 
     public VisualizerView(int width, int height) {
         this.arrayImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -15,9 +17,15 @@ public class VisualizerView extends JPanel {
         this.arrayToDraw = new int[1];
         this.width = width;
         this.height = height;
+        this.frame = new JFrame();
 
         this.setPreferredSize(new Dimension(width, height));
         this.add(imageLabel);
+
+        frame.setSize(width, height);
+        frame.add(this);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void clear() {
@@ -54,5 +62,4 @@ public class VisualizerView extends JPanel {
 
         g.dispose();
     }
-
 }

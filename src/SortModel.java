@@ -1,5 +1,6 @@
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 
 public class SortModel {
     public enum SORT_METHOD {INSERTION, SELECTION, QUICK, MERGE};
@@ -114,6 +115,74 @@ public class SortModel {
         return lowIndex;
     }
 
+    public void bucketSort() {
+        int maxValue = findMax() + 1;
+
+        ArrayList<ArrayList<Integer>> bucketList = new ArrayList<>(maxValue);
+
+        for (int i = 0; i < maxValue; i++) {
+            bucketList.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < array.length; i++) {
+            bucketList.get(array[i]).add(array[i]);
+        }
+
+        int arrayIndex = 0; // Index of next array cell to fill.
+
+        for (int i = 0; i < bucketList.size(); i++) {
+            //bucketList.get(i).sort(Integer::compareTo); // O(nlogn).
+
+            for (int j = 0; j < bucketList.get(i).size(); j++) {
+                array[arrayIndex++] = bucketList.get(i).get(j);
+            }
+        }
+    }
+
+    public void countingSort() {
+        int maxValue = findMax() + 1;
+
+       int[] countArray = new int[maxValue];
+       int[] indexArray = new int[maxValue];
+
+       // Fill count array. Index represents value in array, value at index represents count of that index in array.
+       for (int i = 0; i < array.length; i++) {
+           countArray[array[i]]++;
+       }
+
+       // Fill index array.
+       indexArray[0] = countArray[0];
+       for (int i = 1; i < countArray.length; i++) {
+           // Value at each index is equal to the value before it plus the number of times index appears in the array.
+           indexArray[i] = countArray[i] + indexArray[i - 1];
+       }
+
+       // For every index, the value there is the number of times index must be added to the array.
+       for (int i = 0; i < countArray.length; i++) {
+           while (countArray[i] != 0) {
+               /*
+                After adding the index to the array, we decrement the count and also the index at which it gets
+                placed again.
+               */
+               array[indexArray[i]-- - 1] = i;
+
+               countArray[i]--;
+           }
+       }
+    }
+
+    private int findMax() {
+       int maxSoFar = array[0];
+
+       for (int i = 1; i < array.length; i++) {
+           if (array[i] > maxSoFar) {
+               maxSoFar = array[i];
+           }
+       }
+
+       return maxSoFar;
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         changeSupport.addPropertyChangeListener(listener);
     }
@@ -147,4 +216,38 @@ public class SortModel {
         return builder.toString();
     }
 
+    public static void main(String[] args) {
+        int[] array = new int[1000];
+        for (int i = 0; i < 1000; i++) {
+            array[i] = (int) (Math.random() * 1000);
+        }
+        SortModel model = new SortModel(array);
+
+        for (int i = 0; i < 1000; i++) {
+            System.out.print(array[i] + " ");
+        }
+
+        System.out.println();
+
+        model.bucketSort();
+
+        for (int i = 0; i < 1000; i++) {
+            System.out.print(array[i] + " ");
+
+        }
+
+        System.out.println();
+
+        int[] arr2 = {5, 3, 3, 2, 1, 1, 4, 4, 3};
+
+        SortModel model2 = new SortModel(arr2);
+
+        model2.countingSort();
+
+        for (int i = 0; i < arr2.length; i++) {
+            System.out.print(model2.getArray()[i] + " ");
+        }
+
+        System.out.println();
+    }
 }
