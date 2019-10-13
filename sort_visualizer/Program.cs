@@ -20,17 +20,17 @@ namespace sort_visualizer
 
             /*
             Sorter model = new Sorter();
-            int[] array = new int[100];
+            int[] array = new int[50];
             Random rand = new Random();
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
                 array[i] = rand.Next(200);
             }
 
-            model.array = array;
-            model.insertionSort();
+            model.setArray(array);
+            model.quickSort();
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Console.Write(array[i] + " ");
             }

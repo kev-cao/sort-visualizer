@@ -30,6 +30,7 @@
         {
             this.visualizerPicBox = new System.Windows.Forms.PictureBox();
             this.btnQuickSort = new System.Windows.Forms.Button();
+            this.btnInsertionSort = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.visualizerPicBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,7 +47,7 @@
             // 
             // btnQuickSort
             // 
-            this.btnQuickSort.Location = new System.Drawing.Point(649, 12);
+            this.btnQuickSort.Location = new System.Drawing.Point(650, 12);
             this.btnQuickSort.Name = "btnQuickSort";
             this.btnQuickSort.Size = new System.Drawing.Size(296, 23);
             this.btnQuickSort.TabIndex = 1;
@@ -54,11 +55,22 @@
             this.btnQuickSort.UseVisualStyleBackColor = true;
             this.btnQuickSort.Click += new System.EventHandler(this.btnQuickSort_Click);
             // 
+            // btnInsertionSort
+            // 
+            this.btnInsertionSort.Location = new System.Drawing.Point(650, 42);
+            this.btnInsertionSort.Name = "btnInsertionSort";
+            this.btnInsertionSort.Size = new System.Drawing.Size(296, 23);
+            this.btnInsertionSort.TabIndex = 2;
+            this.btnInsertionSort.Text = "GIMME THAT THICC SLOW INSERTION SORT";
+            this.btnInsertionSort.UseVisualStyleBackColor = true;
+            this.btnInsertionSort.Click += new System.EventHandler(this.btnInsertionSort_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 561);
+            this.Controls.Add(this.btnInsertionSort);
             this.Controls.Add(this.btnQuickSort);
             this.Controls.Add(this.visualizerPicBox);
             this.Name = "MainForm";
@@ -73,6 +85,7 @@
 
         private System.Windows.Forms.PictureBox visualizerPicBox;
         private System.Windows.Forms.Button btnQuickSort;
+        private System.Windows.Forms.Button btnInsertionSort;
     }
 }
 

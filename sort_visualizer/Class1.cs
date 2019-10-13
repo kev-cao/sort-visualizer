@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,14 +10,23 @@ namespace sort_visualizer
     public class ArrayEventArgs : EventArgs
     {
         public int[] array { get; }
+        public int currIndex { get; }
+        public int checkedIndex { get; }
 
-        public ArrayEventArgs(int[] array)
+        public ArrayEventArgs(int[] array, int currIndex, int checkedIndex)
         {
             this.array = array;
+            this.currIndex = currIndex;
+            this.checkedIndex = checkedIndex;
         }
     }
 
-    class Sorter
+    /// <summary>
+    /// The class <c>Sorter</c> takes care of sorting an array and raises an event whenever the array is modified.
+    /// </summary>
+    /// <value>Property <c>array</c> is the array being sorted.</value>
+    /// <value>Property <c>initialArray</c> stored the initial array before it was sorted.</value>
+    class Sorter : BackgroundWorker
     {
         private int[] array;
         private int[] initialArray;
@@ -29,16 +39,22 @@ namespace sort_visualizer
         {
         }
 
-        protected virtual void OnArrayModified()
+        protected virtual void OnArrayModified(int currIndex, int checkedIndex)
         {
-            ArrayModified?.Invoke(this, new ArrayEventArgs(array));
+            ArrayModified?.Invoke(this, new ArrayEventArgs((int[]) array.Clone(), currIndex, checkedIndex));
         }
 
         public void setArray(int[] array)
         {
             this.array = array;
-            this.initialArray = array;
-            OnArrayModified();
+            this.initialArray = (int[]) array.Clone();
+            OnArrayModified(0, 0);
+        }
+
+        public void resetArray()
+        {
+            this.array = (int[])this.initialArray.Clone();
+            OnArrayModified(0, 0);
         }
 
         public void insertionSort()
@@ -51,7 +67,7 @@ namespace sort_visualizer
                 while (j >= 0 && valueToSort < array[j])
                 {
                     array[j + 1] = array[j--];
-                    OnArrayModified();
+                    OnArrayModified(j + 1, j);
                 }
 
                 array[j + 1] = valueToSort;
@@ -61,10 +77,10 @@ namespace sort_visualizer
         public void quickSort()
         {
             quickSortHelper(0, array.Length - 1);
-            OnArrayModified();
+            OnArrayModified(0, 0);
         }
 
-        public void quickSortHelper(int start, int end)
+        private void quickSortHelper(int start, int end)
         {
             if (start < end)
             {
@@ -115,7 +131,7 @@ namespace sort_visualizer
                     array[lowBoundaryIndex] = array[i];
                     array[i] = tmp;
                     lowBoundaryIndex++;
-                    OnArrayModified();
+                    OnArrayModified(pivotIndex, i);
                 }
             }
 
