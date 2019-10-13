@@ -51,7 +51,7 @@
             this.btnQuickSort.Name = "btnQuickSort";
             this.btnQuickSort.Size = new System.Drawing.Size(296, 23);
             this.btnQuickSort.TabIndex = 1;
-            this.btnQuickSort.Text = "QUICK SORT THE EVER LIVING SHIT OUT OF ME";
+            this.btnQuickSort.Text = "Quick Sort Me!";
             this.btnQuickSort.UseVisualStyleBackColor = true;
             this.btnQuickSort.Click += new System.EventHandler(this.btnQuickSort_Click);
             // 
@@ -61,7 +61,7 @@
             this.btnInsertionSort.Name = "btnInsertionSort";
             this.btnInsertionSort.Size = new System.Drawing.Size(296, 23);
             this.btnInsertionSort.TabIndex = 2;
-            this.btnInsertionSort.Text = "GIMME THAT THICC SLOW INSERTION SORT";
+            this.btnInsertionSort.Text = "Insertion Sort Me!";
             this.btnInsertionSort.UseVisualStyleBackColor = true;
             this.btnInsertionSort.Click += new System.EventHandler(this.btnInsertionSort_Click);
             // 

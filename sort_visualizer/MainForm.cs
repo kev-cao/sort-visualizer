@@ -25,6 +25,8 @@ namespace sort_visualizer
         private Queue<Image> animationQueue;
         private Image currentImage;
         private System.Windows.Forms.Timer animationTimer;
+        private object sortLock;
+        private bool resettingSort;
         public MainForm()
         {
             InitializeComponent();
@@ -36,6 +38,8 @@ namespace sort_visualizer
             animationTimer.Tick += new EventHandler(animationTimerTick);
             animationQueue = new Queue<Image>();
             currentImage = new Bitmap(visualizerPicBox.Width, visualizerPicBox.Height);
+            sortLock = new object();
+            resettingSort = false;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -114,7 +118,10 @@ namespace sort_visualizer
             }
             await Task.Run(() =>
             {
-                sorterModel.quickSort();
+                lock (sortLock)
+                {
+                    sorterModel.quickSort();
+                }
             }
             );
         }
@@ -128,18 +135,29 @@ namespace sort_visualizer
             }
             await Task.Run(() =>
             {
-                sorterModel.insertionSort();
+                lock (sortLock)
+                {
+                    sorterModel.insertionSort();
+                }
             });
         }
 
         private void startNewSort()
         {
-            while (animationQueue.Count > 0)
+            if (!resettingSort)
             {
-                animationQueue.Dequeue().Dispose();
+                lock (sortLock)
+                {
+                    resettingSort = true;
+                    while (animationQueue.Count > 0)
+                    {
+                        animationQueue.Dequeue().Dispose();
+                    }
+                    sorterModel.resetArray();
+                    resettingSort = false;
+                }
+
             }
-            sorterModel.resetArray();
-            Console.WriteLine(Process.GetCurrentProcess().Threads.Count);
         }
     }
 }

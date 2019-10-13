@@ -26,7 +26,7 @@ namespace sort_visualizer
     /// </summary>
     /// <value>Property <c>array</c> is the array being sorted.</value>
     /// <value>Property <c>initialArray</c> stored the initial array before it was sorted.</value>
-    class Sorter : BackgroundWorker
+    class Sorter
     {
         private int[] array;
         private int[] initialArray;
@@ -53,6 +53,7 @@ namespace sort_visualizer
 
         public void resetArray()
         {
+            Console.WriteLine("Resetting...");
             this.array = (int[])this.initialArray.Clone();
             OnArrayModified(0, 0);
         }
@@ -72,12 +73,14 @@ namespace sort_visualizer
 
                 array[j + 1] = valueToSort;
             }
+            Console.WriteLine("Done");
         }
 
         public void quickSort()
         {
             quickSortHelper(0, array.Length - 1);
             OnArrayModified(0, 0);
+            Console.WriteLine("Done");
         }
 
         private void quickSortHelper(int start, int end)
