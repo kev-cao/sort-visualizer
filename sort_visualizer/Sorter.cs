@@ -44,10 +44,15 @@ namespace sort_visualizer
             ArrayModified?.Invoke(this, new ArrayEventArgs((int[]) array.Clone(), currIndex, checkedIndex));
         }
 
-        public void setArray(int[] array)
+        public void generateArray(int size, int min, int max)
         {
-            this.array = array;
-            this.initialArray = (int[]) array.Clone();
+            array = new int[size];
+            initialArray = new int[size];
+            for (int i = 0; i < size; i++)
+            {
+                array[i] = rand.Next(min, max + 1);
+                initialArray[i] = array[i];
+            }
             OnArrayModified(0, 0);
         }
 
