@@ -9,15 +9,29 @@ namespace sort_visualizer
 {
     public class ArrayEventArgs : EventArgs
     {
-        public int[] array { get; }
         public int currIndex { get; }
         public int checkedIndex { get; }
-
-        public ArrayEventArgs(int[] array, int currIndex, int checkedIndex)
+        public int currIndexVal { get; }
+        public int checkedIndexVal { get; }
+        public bool hasSwapped { get; }
+        public int swap1 { get; }
+        public int swap2 { get; }
+        public int swap1Val { get; }
+        public int swap2Val { get; }
+        public int arraySize { get; }
+        public ArrayEventArgs(int currIndex, int checkedIndex, int currIndexVal, int checkedIndexVal, 
+            bool hasSwapped, int swap1, int swap2, int swap1Val, int swap2Val, int arraySize)
         {
-            this.array = array;
             this.currIndex = currIndex;
             this.checkedIndex = checkedIndex;
+            this.currIndexVal = currIndexVal;
+            this.checkedIndexVal = checkedIndexVal;
+            this.hasSwapped = hasSwapped;
+            this.swap1 = swap1;
+            this.swap2 = swap2;
+            this.swap1Val = swap1Val;
+            this.swap2Val = swap2Val;
+            this.arraySize = arraySize;
         }
     }
 
@@ -39,9 +53,11 @@ namespace sort_visualizer
         {
         }
 
-        protected virtual void OnArrayModified(int currIndex, int checkedIndex)
+        protected virtual void OnArrayModified(int currIndex, int checkedIndex, int currIndexVal, int checkedIndexVal,
+            bool hasSwapped = false, int swap1 = -1, int swap2 = -1, int swap1Val = -1, int swap2Val = -1)
         {
-            ArrayModified?.Invoke(this, new ArrayEventArgs((int[]) array.Clone(), currIndex, checkedIndex));
+            ArrayModified?.Invoke(this, new ArrayEventArgs(currIndex, checkedIndex, currIndexVal, checkedIndexVal,
+                hasSwapped, swap1, swap2, swap1Val, swap2Val, array.Length));
         }
 
         public void generateArray(int size, int min, int max)
@@ -53,14 +69,18 @@ namespace sort_visualizer
                 array[i] = rand.Next(min, max + 1);
                 initialArray[i] = array[i];
             }
-            OnArrayModified(0, 0);
+            OnArrayModified(0, 0, array[0], array[0]);
         }
 
         public void resetArray()
         {
-            Console.WriteLine("Resetting...");
             this.array = (int[])this.initialArray.Clone();
-            OnArrayModified(0, 0);
+            OnArrayModified(0, 0, array[0], array[0]);
+        }
+
+        public int[] getArray()
+        {
+            return array;
         }
 
         public void insertionSort()
@@ -72,20 +92,19 @@ namespace sort_visualizer
 
                 while (j >= 0 && valueToSort < array[j])
                 {
-                    array[j + 1] = array[j--];
-                    OnArrayModified(j + 1, j);
+                    array[j + 1] = array[j];
+                    OnArrayModified(j + 1, j, array[j + 1], array[j], true, j + 1, j, array[j + 1], array[j]);
+                    j--;
                 }
 
                 array[j + 1] = valueToSort;
             }
-            Console.WriteLine("Done");
         }
 
         public void quickSort()
         {
             quickSortHelper(0, array.Length - 1);
-            OnArrayModified(0, 0);
-            Console.WriteLine("Done");
+            OnArrayModified(0, 0, array[0], array[0]);
         }
 
         private void quickSortHelper(int start, int end)
@@ -138,8 +157,8 @@ namespace sort_visualizer
                     int tmp = array[lowBoundaryIndex];
                     array[lowBoundaryIndex] = array[i];
                     array[i] = tmp;
+                    OnArrayModified(pivotIndex, i, pivot, array[i], true, lowBoundaryIndex, i, array[lowBoundaryIndex], array[i]);
                     lowBoundaryIndex++;
-                    OnArrayModified(pivotIndex, i);
                 }
             }
 

@@ -24,8 +24,9 @@ namespace sort_visualizer
     public partial class MainForm : Form
     {
         private Sorter sorterModel;
-        private Queue<Image> animationQueue;
+        private Queue<ArrayEventArgs> snapshotQueue;
         private Image currentImage;
+        private ArrayEventArgs currentSnapshot;
         private System.Windows.Forms.Timer animationTimer;
         private object sortLock;
         private bool resettingSort;
@@ -44,7 +45,7 @@ namespace sort_visualizer
             animationTimer = new System.Windows.Forms.Timer();
             animationTimer.Interval = 10;
             animationTimer.Tick += new EventHandler(animationTimerTick);
-            animationQueue = new Queue<Image>();
+            snapshotQueue = new Queue<ArrayEventArgs>();
             currentImage = new Bitmap(picBoxVisualizer.Width, picBoxVisualizer.Height);
             sortLock = new object();
             resettingSort = false;
@@ -58,6 +59,7 @@ namespace sort_visualizer
         private void MainForm_Load(object sender, EventArgs e)
         {
             sorterModel.generateArray(defaultArraySize, defaultRangeMin, defaultRangeMax);
+            drawArray(sorterModel.getArray());
         }
 
         /// <summary>
@@ -67,6 +69,8 @@ namespace sort_visualizer
         /// <param name="args">Contains the array to be drawn, and array indexes being compared.</param>
         public void OnArrayModified(object src, ArrayEventArgs args)
         {
+            snapshotQueue.Enqueue(args);
+            /*
             Bitmap bitmap = new Bitmap(picBoxVisualizer.Width, picBoxVisualizer.Height);
             int[] arrayToDraw = args.array;
             Graphics visualizerGraphics = Graphics.FromImage(bitmap);
@@ -90,8 +94,9 @@ namespace sort_visualizer
                 visualizerGraphics.DrawLine(pen, offset + i * barWidth, bitmap.Height, offset + i * barWidth, bitmap.Height - arrayToDraw[i]);
             }
 
-            animationQueue.Enqueue(bitmap);
+            snapShotQueue.Enqueue(bitmap);
             visualizerGraphics.Dispose();
+            */
         }
 
         /// <summary>
@@ -101,18 +106,78 @@ namespace sort_visualizer
         /// <param name="args">Additional arguments with the event.</param>
         private void animationTimerTick(Object src, EventArgs args)
         {
-            if (animationQueue.Count > 0)
+            if (snapshotQueue.Count > 0)
             {
-                currentImage.Dispose();
-                currentImage = animationQueue.Dequeue();
+                currentSnapshot = snapshotQueue.Dequeue();
                 picBoxVisualizer.Refresh();
             }
              
         }
 
+        private void drawArray(int[] array)
+        {
+            Graphics imageGraphics = Graphics.FromImage(currentImage);
+            int canvasWidth = currentImage.Width;
+            int barWidth = Math.Max(1, canvasWidth / array.Length);
+            int offset = (canvasWidth - array.Length * barWidth) / 2;
+
+            Pen pen = new Pen(Color.White, barWidth);
+            for (int i = 0; i < array.Length; i++)
+            {
+                imageGraphics.DrawLine(pen, offset + i * barWidth, currentImage.Height, offset + i * barWidth, currentImage.Height - array[i]);
+            }
+            imageGraphics.Dispose();
+            picBoxVisualizer.Refresh();
+        }
+
         private void picBoxVisualizer_Paint(object sender, PaintEventArgs e)
         {
             Graphics picBoxGraphics = e.Graphics;
+
+            if (currentSnapshot != null)
+            {
+                int currIndex = currentSnapshot.currIndex;
+                int currIndexVal = currentSnapshot.currIndexVal;
+                int checkedIndex = currentSnapshot.checkedIndex;
+                int checkedIndexVal = currentSnapshot.checkedIndexVal;
+                int arraySize = currentSnapshot.arraySize;
+
+
+                Graphics imageGraphics = Graphics.FromImage(currentImage);
+                int canvasWidth = currentImage.Width;
+                int barWidth = Math.Max(1, canvasWidth / arraySize);
+                int offset = (canvasWidth - arraySize * barWidth) / 2;
+
+                Pen backGroundPen = new Pen(picBoxVisualizer.BackColor, barWidth);
+                Pen pen = new Pen(Color.White, barWidth);
+
+                if (currentSnapshot.hasSwapped)
+                {
+                    int swap1 = currentSnapshot.swap1;
+                    int swap1Val = currentSnapshot.swap1Val;
+                    int swap2 = currentSnapshot.swap2;
+                    int swap2Val = currentSnapshot.swap2Val;
+
+                    imageGraphics.DrawLine(backGroundPen, offset + swap1 * barWidth, currentImage.Height, offset + swap1 * barWidth, 0);
+                    imageGraphics.DrawLine(pen, offset + swap1 * barWidth, currentImage.Height, 
+                        offset + swap1 * barWidth, currentImage.Height - swap2Val);
+
+                    imageGraphics.DrawLine(backGroundPen, offset + swap2 * barWidth, currentImage.Height, offset + swap2 * barWidth, 0);
+                    imageGraphics.DrawLine(pen, offset + swap2 * barWidth, currentImage.Height, 
+                        offset + swap2 * barWidth, currentImage.Height - swap1Val);
+                }
+
+                pen.Color = Color.Red;
+                imageGraphics.DrawLine(backGroundPen, offset + currIndex * barWidth, currentImage.Height, offset + currIndex * barWidth, 0);
+                imageGraphics.DrawLine(pen, offset + currIndex * barWidth, currentImage.Height, 
+                    offset + currIndex * barWidth, currentImage.Height - currIndexVal);
+
+                pen.Color = Color.Green;
+                imageGraphics.DrawLine(backGroundPen, offset + checkedIndex * barWidth, currentImage.Height, offset + checkedIndex * barWidth, 0);
+                imageGraphics.DrawLine(pen, offset + checkedIndex * barWidth, currentImage.Height, 
+                    offset + checkedIndex * barWidth, currentImage.Height - checkedIndexVal);
+            }
+
             picBoxGraphics.DrawImage(currentImage, new Point(0, 0));
         }
 
@@ -178,9 +243,9 @@ namespace sort_visualizer
                 // Wait for sorting to finish before proceeding and block all sort attempts while resetting.
                 lock (sortLock)
                 {
-                    while (animationQueue.Count > 0)
+                    while (snapshotQueue.Count > 0)
                     {
-                        animationQueue.Dequeue().Dispose();
+                        snapshotQueue.Dequeue();
                     }
                     sorterModel.resetArray();
                     resettingSort = false;
