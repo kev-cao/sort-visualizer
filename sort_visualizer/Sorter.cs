@@ -58,7 +58,6 @@ namespace sort_visualizer
 
         public void resetArray()
         {
-            Console.WriteLine("Resetting...");
             this.array = (int[])this.initialArray.Clone();
             OnArrayModified(0, 0);
         }
@@ -67,25 +66,24 @@ namespace sort_visualizer
         {
             for (int i = 0; i < array.Length; i++)
             {
-                int valueToSort = array[i];
-                int j = i - 1;
-
-                while (j >= 0 && valueToSort < array[j])
+                int k = i;
+                OnArrayModified(k, Math.Max(0, k - 1));
+                while (k > 0 && array[k] < array[k - 1])
                 {
-                    array[j + 1] = array[j--];
-                    OnArrayModified(j + 1, j);
+                    OnArrayModified(k, k - 1);
+                    int tmp = array[k];
+                    array[k] = array[k - 1];
+                    array[k - 1] = tmp;
+                    k--;
                 }
-
-                array[j + 1] = valueToSort;
             }
-            Console.WriteLine("Done");
+            OnArrayModified(0, 0);
         }
 
         public void quickSort()
         {
             quickSortHelper(0, array.Length - 1);
             OnArrayModified(0, 0);
-            Console.WriteLine("Done");
         }
 
         private void quickSortHelper(int start, int end)
@@ -133,13 +131,14 @@ namespace sort_visualizer
 
             for (int i = start; i < end; i++)
             {
+                OnArrayModified(end, i);
                 if (array[i] <= pivot)
                 {
                     int tmp = array[lowBoundaryIndex];
                     array[lowBoundaryIndex] = array[i];
                     array[i] = tmp;
+                    OnArrayModified(end, lowBoundaryIndex);
                     lowBoundaryIndex++;
-                    OnArrayModified(pivotIndex, i);
                 }
             }
 

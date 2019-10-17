@@ -1,6 +1,3 @@
 # sort-visualizer
 
-A program that visualizes various sorting algorithms. At least, that's the plan.
-
-
-JavaxSwing makes it very difficult to draw onto a panel while also allowing the user to interact with the interface. Drawing is sent to the Event Dispatch Thread (EDT), which then freezes all other events, including button events. I think I will switch to using C#.
+A program that visualizes various sorting algorithms, created using Windows Forms through Visual Studio and C#. A Sorter model class takes care of the sorting, and raises an event to send to the UI whenever a specific occurence needs to be drawn. The user can define the size of the array, the range of values within the array, and the speed at which the sorting animation is run at.
