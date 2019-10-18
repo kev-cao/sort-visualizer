@@ -33,6 +33,8 @@
             this.btnInsertionSort = new System.Windows.Forms.Button();
             this.grpBoxSortingAlgos = new System.Windows.Forms.GroupBox();
             this.grpBoxArraySetup = new System.Windows.Forms.GroupBox();
+            this.tkBarAnimationSpeed = new System.Windows.Forms.TrackBar();
+            this.lblAnimationSpeed = new System.Windows.Forms.Label();
             this.lblRangeError = new System.Windows.Forms.Label();
             this.lblArrayError = new System.Windows.Forms.Label();
             this.btnSetupArray = new System.Windows.Forms.Button();
@@ -43,8 +45,9 @@
             this.lblArrayRange = new System.Windows.Forms.Label();
             this.lblArraySize = new System.Windows.Forms.Label();
             this.txtBoxArraySize = new System.Windows.Forms.TextBox();
-            this.lblAnimationSpeed = new System.Windows.Forms.Label();
-            this.tkBarAnimationSpeed = new System.Windows.Forms.TrackBar();
+            this.btnMergeSort = new System.Windows.Forms.Button();
+            this.btnBubbleSort = new System.Windows.Forms.Button();
+            this.btnSelectionSort = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxVisualizer)).BeginInit();
             this.grpBoxSortingAlgos.SuspendLayout();
             this.grpBoxArraySetup.SuspendLayout();
@@ -64,26 +67,29 @@
             // 
             // btnQuickSort
             // 
-            this.btnQuickSort.Location = new System.Drawing.Point(6, 19);
+            this.btnQuickSort.Location = new System.Drawing.Point(179, 48);
             this.btnQuickSort.Name = "btnQuickSort";
             this.btnQuickSort.Size = new System.Drawing.Size(139, 23);
-            this.btnQuickSort.TabIndex = 4;
-            this.btnQuickSort.Text = "Quick Sort Me!";
+            this.btnQuickSort.TabIndex = 5;
+            this.btnQuickSort.Text = "Quick Sort";
             this.btnQuickSort.UseVisualStyleBackColor = true;
             this.btnQuickSort.Click += new System.EventHandler(this.btnQuickSort_Click);
             // 
             // btnInsertionSort
             // 
-            this.btnInsertionSort.Location = new System.Drawing.Point(6, 48);
+            this.btnInsertionSort.Location = new System.Drawing.Point(6, 19);
             this.btnInsertionSort.Name = "btnInsertionSort";
             this.btnInsertionSort.Size = new System.Drawing.Size(139, 23);
-            this.btnInsertionSort.TabIndex = 5;
-            this.btnInsertionSort.Text = "Insertion Sort Me!";
+            this.btnInsertionSort.TabIndex = 1;
+            this.btnInsertionSort.Text = "Insertion Sort";
             this.btnInsertionSort.UseVisualStyleBackColor = true;
             this.btnInsertionSort.Click += new System.EventHandler(this.btnInsertionSort_Click);
             // 
             // grpBoxSortingAlgos
             // 
+            this.grpBoxSortingAlgos.Controls.Add(this.btnSelectionSort);
+            this.grpBoxSortingAlgos.Controls.Add(this.btnBubbleSort);
+            this.grpBoxSortingAlgos.Controls.Add(this.btnMergeSort);
             this.grpBoxSortingAlgos.Controls.Add(this.btnQuickSort);
             this.grpBoxSortingAlgos.Controls.Add(this.btnInsertionSort);
             this.grpBoxSortingAlgos.Location = new System.Drawing.Point(618, 141);
@@ -113,6 +119,26 @@
             this.grpBoxArraySetup.TabIndex = 1;
             this.grpBoxArraySetup.TabStop = false;
             this.grpBoxArraySetup.Text = "Parameters";
+            // 
+            // tkBarAnimationSpeed
+            // 
+            this.tkBarAnimationSpeed.Location = new System.Drawing.Point(193, 29);
+            this.tkBarAnimationSpeed.Maximum = 50;
+            this.tkBarAnimationSpeed.Minimum = 1;
+            this.tkBarAnimationSpeed.Name = "tkBarAnimationSpeed";
+            this.tkBarAnimationSpeed.Size = new System.Drawing.Size(104, 45);
+            this.tkBarAnimationSpeed.TabIndex = 3;
+            this.tkBarAnimationSpeed.Value = 10;
+            this.tkBarAnimationSpeed.Scroll += new System.EventHandler(this.tkBarAnimationSpeed_Scroll);
+            // 
+            // lblAnimationSpeed
+            // 
+            this.lblAnimationSpeed.AutoSize = true;
+            this.lblAnimationSpeed.Location = new System.Drawing.Point(201, 16);
+            this.lblAnimationSpeed.Name = "lblAnimationSpeed";
+            this.lblAnimationSpeed.Size = new System.Drawing.Size(87, 13);
+            this.lblAnimationSpeed.TabIndex = 10;
+            this.lblAnimationSpeed.Text = "Animation Speed";
             // 
             // lblRangeError
             // 
@@ -207,26 +233,35 @@
             this.txtBoxArraySize.TabIndex = 0;
             this.txtBoxArraySize.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBoxArraySize_KeyPress);
             // 
-            // lblAnimationSpeed
+            // btnMergeSort
             // 
-            this.lblAnimationSpeed.AutoSize = true;
-            this.lblAnimationSpeed.Location = new System.Drawing.Point(201, 16);
-            this.lblAnimationSpeed.Name = "lblAnimationSpeed";
-            this.lblAnimationSpeed.Size = new System.Drawing.Size(87, 13);
-            this.lblAnimationSpeed.TabIndex = 10;
-            this.lblAnimationSpeed.Text = "Animation Speed";
+            this.btnMergeSort.Location = new System.Drawing.Point(179, 19);
+            this.btnMergeSort.Name = "btnMergeSort";
+            this.btnMergeSort.Size = new System.Drawing.Size(139, 23);
+            this.btnMergeSort.TabIndex = 4;
+            this.btnMergeSort.Text = "Merge Sort";
+            this.btnMergeSort.UseVisualStyleBackColor = true;
+            this.btnMergeSort.Click += new System.EventHandler(this.btnMergeSort_Click);
             // 
-            // tkBarAnimationSpeed
+            // btnBubbleSort
             // 
-            this.tkBarAnimationSpeed.LargeChange = 4;
-            this.tkBarAnimationSpeed.Location = new System.Drawing.Point(193, 29);
-            this.tkBarAnimationSpeed.Maximum = 20;
-            this.tkBarAnimationSpeed.Minimum = 1;
-            this.tkBarAnimationSpeed.Name = "tkBarAnimationSpeed";
-            this.tkBarAnimationSpeed.Size = new System.Drawing.Size(104, 45);
-            this.tkBarAnimationSpeed.TabIndex = 3;
-            this.tkBarAnimationSpeed.Value = 10;
-            this.tkBarAnimationSpeed.Scroll += new System.EventHandler(this.tkBarAnimationSpeed_Scroll);
+            this.btnBubbleSort.Location = new System.Drawing.Point(6, 49);
+            this.btnBubbleSort.Name = "btnBubbleSort";
+            this.btnBubbleSort.Size = new System.Drawing.Size(139, 23);
+            this.btnBubbleSort.TabIndex = 2;
+            this.btnBubbleSort.Text = "Bubble Sort";
+            this.btnBubbleSort.UseVisualStyleBackColor = true;
+            this.btnBubbleSort.Click += new System.EventHandler(this.btnBubbleSort_Click);
+            // 
+            // btnSelectionSort
+            // 
+            this.btnSelectionSort.Location = new System.Drawing.Point(6, 78);
+            this.btnSelectionSort.Name = "btnSelectionSort";
+            this.btnSelectionSort.Size = new System.Drawing.Size(139, 23);
+            this.btnSelectionSort.TabIndex = 3;
+            this.btnSelectionSort.Text = "Selection Sort";
+            this.btnSelectionSort.UseVisualStyleBackColor = true;
+            this.btnSelectionSort.Click += new System.EventHandler(this.btnSelectionSort_Click);
             // 
             // MainForm
             // 
@@ -268,6 +303,9 @@
         private System.Windows.Forms.Label lblArrayError;
         private System.Windows.Forms.TrackBar tkBarAnimationSpeed;
         private System.Windows.Forms.Label lblAnimationSpeed;
+        private System.Windows.Forms.Button btnMergeSort;
+        private System.Windows.Forms.Button btnBubbleSort;
+        private System.Windows.Forms.Button btnSelectionSort;
     }
 }
 

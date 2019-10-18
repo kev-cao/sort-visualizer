@@ -71,9 +71,7 @@ namespace sort_visualizer
                 while (k > 0 && array[k] < array[k - 1])
                 {
                     OnArrayModified(k, k - 1);
-                    int tmp = array[k];
-                    array[k] = array[k - 1];
-                    array[k - 1] = tmp;
+                    swap(k, k - 1);
                     k--;
                 }
             }
@@ -134,9 +132,7 @@ namespace sort_visualizer
                 OnArrayModified(end, i);
                 if (array[i] <= pivot)
                 {
-                    int tmp = array[lowBoundaryIndex];
-                    array[lowBoundaryIndex] = array[i];
-                    array[i] = tmp;
+                    swap(lowBoundaryIndex, i);
                     OnArrayModified(end, lowBoundaryIndex);
                     lowBoundaryIndex++;
                 }
@@ -146,6 +142,96 @@ namespace sort_visualizer
             array[lowBoundaryIndex] = pivot;
 
             return lowBoundaryIndex;
+        }
+
+        public void mergeSort()
+        {
+            mergeSortHelper(0, array.Length - 1);
+            OnArrayModified(0, 0);
+        }
+
+        private void mergeSortHelper(int start, int end)
+        {
+            if (start == end)
+            {
+                return;
+            } else
+            {
+                int middle = (start + end) / 2;
+                mergeSortHelper(start, middle);
+                mergeSortHelper(middle + 1, end);
+                merge(start, middle, middle + 1, end);
+            }
+        }
+
+        private void merge(int startA, int endA, int startB, int endB)
+        {
+            while (startA <= endA && startB <= endB)
+            {
+                OnArrayModified(startA, startB);
+                if (array[startA] > array[startB])
+                {
+                    int tmp = array[startB];
+                    for (int i = startB; i > startA; i--)
+                    {
+                        array[i] = array[i - 1];
+                    }
+                    array[startA++] = tmp;
+                    startB++;
+                    endA++;
+                } else
+                {
+                    startA++;
+                }
+            }
+        }
+
+        public void bubbleSort()
+        {
+            for (int i = array.Length; i >= 0; i--)
+            {
+                int k = i;
+                OnArrayModified(k, Math.Min(array.Length - 1, k + 1));
+                while (k < array.Length - 1 && array[k] > array[k + 1])
+                {
+                    OnArrayModified(k, k + 1);
+                    swap(k, k + 1);
+                    k++;
+                }
+            }
+            OnArrayModified(0, 0);
+        }
+
+        public void selectionSort()
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                int minIndex = findMin(i);
+                swap(minIndex, i);
+                OnArrayModified(i, minIndex);
+            }
+            OnArrayModified(0, 0);
+        }
+
+        private int findMin(int start)
+        {
+            int minIndex = start;
+            for (int i = start + 1; i < array.Length; i++)
+            {
+                OnArrayModified(minIndex, i);
+                if (array[i] < array[minIndex])
+                {
+                    minIndex = i;
+                }
+            }
+            return minIndex;
+        }
+
+        private void swap(int i, int j)
+        {
+            int tmp = array[i];
+            array[i] = array[j];
+            array[j] = tmp;
         }
     }
 }

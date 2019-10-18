@@ -38,7 +38,10 @@ namespace sort_visualizer
         private enum Sorts
         {
             Insertion,
-            Quick
+            Bubble,
+            Selection,
+            Quick,
+            Merge
         }
         public MainForm()
         {
@@ -47,7 +50,7 @@ namespace sort_visualizer
             sorterModel.ArrayModified += this.OnArrayModified;
 
             animationTimer = new System.Windows.Forms.Timer();
-            timerInterval = 200;
+            timerInterval = 150;
             animationTimer.Interval = timerInterval;
             animationTimer.Tick += new EventHandler(animationTimerTick);
             animationQueue = new Queue<ArrayEventArgs>();
@@ -100,8 +103,8 @@ namespace sort_visualizer
                     Graphics visualizerGraphics = Graphics.FromImage(currentImage);
                     visualizerGraphics.Clear(Color.Empty);
                     int canvasWidth = currentImage.Width;
-                    int barWidth = Math.Max(1, canvasWidth / arrayToDraw.Length);
-                    int offset = (canvasWidth - arrayToDraw.Length * barWidth) / 2;
+                    float barWidth = Math.Max(1, (float) canvasWidth / arrayToDraw.Length);
+                    float offset = (canvasWidth - arrayToDraw.Length * barWidth) / 2;
 
                     Pen pen = new Pen(Color.White, barWidth);
                     for (int i = 0; i < arrayToDraw.Length; i++)
@@ -161,8 +164,17 @@ namespace sort_visualizer
                             case Sorts.Insertion:
                                 sorterModel.insertionSort();
                                 break;
+                            case Sorts.Bubble:
+                                sorterModel.bubbleSort();
+                                break;
+                            case Sorts.Selection:
+                                sorterModel.selectionSort();
+                                break;
                             case Sorts.Quick:
                                 sorterModel.quickSort();
+                                break;
+                            case Sorts.Merge:
+                                sorterModel.mergeSort();
                                 break;
                             default:
                                 break; // Should never get here.
@@ -170,6 +182,11 @@ namespace sort_visualizer
                     }
                 });
             }
+        }
+
+        private void tkBarAnimationSpeed_Scroll(object sender, EventArgs e)
+        {
+            animationTimer.Interval = timerInterval / tkBarAnimationSpeed.Value;
         }
 
         private void btnQuickSort_Click(object sender, EventArgs e)
@@ -182,9 +199,19 @@ namespace sort_visualizer
             runSort(Sorts.Insertion);
         }
 
-        private void tkBarAnimationSpeed_Scroll(object sender, EventArgs e)
+        private void btnMergeSort_Click(object sender, EventArgs e)
         {
-            animationTimer.Interval = timerInterval / tkBarAnimationSpeed.Value;
+            runSort(Sorts.Merge);
+        }
+
+        private void btnBubbleSort_Click(object sender, EventArgs e)
+        {
+            runSort(Sorts.Bubble);
+        }
+
+        private void btnSelectionSort_Click(object sender, EventArgs e)
+        {
+            runSort(Sorts.Selection);
         }
 
         /// <summary>
